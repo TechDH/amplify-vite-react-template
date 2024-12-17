@@ -11,7 +11,8 @@ const schema = a.schema({
     .model({
       content: a.string(),
     })
-    .authorization((allow) => [allow.publicApiKey()]),
+    //.authorization((allow) => [allow.publicApiKey()]), // anyone logged in
+    .authorization(allow => [allow.owner()]), // only owner of item
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -19,7 +20,8 @@ export type Schema = ClientSchema<typeof schema>;
 export const data = defineData({
   schema,
   authorizationModes: {
-    defaultAuthorizationMode: "apiKey",
+    //defaultAuthorizationMode: "apiKey", // any user logged in
+    defaultAuthorizationMode: 'userPool', // only owner of item
     // API Key is used for a.allow.public() rules
     apiKeyAuthorizationMode: {
       expiresInDays: 30,
